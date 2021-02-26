@@ -15,7 +15,9 @@ class ApplicationController < Sinatra::Base
     erb :'/registrations/signup'
   end
 
+
   post '/registrations' do
+    binding.pry
     @user = User.new(name: params["name"], email: params["email"], password: params["password"])
     @user.save
     session[:user_id] = @user.id
@@ -25,7 +27,7 @@ class ApplicationController < Sinatra::Base
   end
 
   get '/sessions/login' do
-
+    
     # the line of code below render the view page in app/views/sessions/login.erb
     erb :'sessions/login'
   end
@@ -45,9 +47,13 @@ class ApplicationController < Sinatra::Base
   end
 
   get '/users/home' do
-    binding.pry
-
+# binding.pry
     @user = User.find(session[:user_id])
-    erb :'/users/home'
+    if session[:user_id] 
+      erb :'/users/home'
+    else 
+      redirect 'sessions/login'
+    end
+    
   end
 end
